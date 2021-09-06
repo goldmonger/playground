@@ -1,37 +1,53 @@
 class Solution:
-    def expandAroundCenter(self, s, left, right):
-        L = left 
+    # this function expands a string s with left start and right start pointers
+    # returns the 
+    def expand(self, s, left, right) -> int:
         R = right
-        while(L>=0 and R<len(s)):
-            if s[L] == s[R]:
-                #print(L)
-                #print(R)
-                L-=1
-                R+=1
-            else: break
+        L = left
+        #print("init R: ", R)
+        #print("init L: ", L)
+        
+        while((L>=0 and R<len(s)) and s[L] == s[R]):
+            #print("in loop while: ")
             
-        return R - L -1
+            L-=1
+            #print("L dec :", L)
+            R+=1
+            #print("R inc :", R)
+        #print(R-L-1)
+        # note: -(-l) becomes +l
         
-        
+        return R-L-1
     def longestPalindrome(self, s: str) -> str:
-        if(s == None or len(s) < 1):
-            return ""
-        else:
-            start = 0
-            end = 0
-            for i in range(0,len(s)):
-                len1 = self.expandAroundCenter(s, i, i)
-                len2 = self.expandAroundCenter(s, i , (i+1))
-                lenn = max(len1, len2)
-                if(lenn > end - start):
-                    start = i - int((lenn-1)/2)
-                    end = i + int(lenn/2)
-                #print(start)
-                #print(end)
-                #print(s[int(start):int(end+1)])
-                #print(lenn)
-                #print()
+        # we return a string
+        # substring of s from start to end indices
+        start = 0
+        end = 0
+        # initially 0
+        
+        # expand around center
+        for i in range(len(s)):
+            # if the string is odd then center is singular n-1/2 
+            # ex: n=5 center= (5-1)/2 = 2 [a,b,c,d,e] 
+            #                             [0,1,2,3,4]
+            # if the string is even then center is shared
+            #print("iteration: ", i, "char as mid", s[i])
+            side_len_odd = self.expand(s, i, i)
+            #print("side len odd ", side_len_odd)
+            #print("iteration: ", i, "chars as mid", s[i], s[i+1])
+            side_len_even = self.expand(s, i, (i+1))
+            #print("side len even ", side_len_even)
+            
+            best_len = max(side_len_odd, side_len_even)
+            #print("best len", best_len)
+            
+            if(best_len>end-start):
                 
-            end +=1
-            return s[round(int(start)):round(int(end))]
-                
+                start = i - int((best_len-1)/2)
+                end = i + int((best_len/2))
+                #print("start: ", start)
+                #print("end: ", end+1)
+        end+=1
+        return s[start:end]
+            
+            
