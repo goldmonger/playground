@@ -1,6 +1,7 @@
 class Solution:
     def numPairsDivisibleBy60(self, time: List[int]) -> int:
         #print(time)
+        # (a+b) %60 = ( a%60 + b%60 ) % 60 = 0
         remList = [0] * 60
         counter = 0
         for i in range(len(time)):
